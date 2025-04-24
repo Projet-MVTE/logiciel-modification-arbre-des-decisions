@@ -1,8 +1,9 @@
 import json
+import os
 
-class Node():
+class Node:
     """
-    Objet Noeud d'un arbre de décisions
+    Objet Nœud d'un arbre de décisions
     """
     def __init__(self, name, coord=""):
         """
@@ -20,30 +21,30 @@ class Node():
         """
         Ajoute un noeud enfant
 
-        Parametres :
+        Paramètres :
         -------------------------------------
         child : Node : Noeud enfant à ajouter
         """
         if isinstance(child, Node):
             self.children.append(child)
-        #else:
-            #print("Erreur : Il faut un Node en parametre")
+        elif os.name == 'nt': # exécuté seulement sous Windows
+            print("Erreur : Il faut un Node en paramètre")
 
     def supp_child(self, child):
         """
         Supprime un noeud enfant
 
-        Parametres :
+        paramètres :
         ---------------------------------------
         child : Node : Noeud enfant à supprimer
         """
         if isinstance(child, Node):
             if child in self.children:
                 self.children.pop(self.children.index(child))
-            #else:
-                #print("Noeud inexistant")
-        #else:
-            #print("Erreur : Il faut un Node en parametre")
+            elif os.name == 'nt': # exécuté seulement sous Windows
+                print("Noeud inexistant")
+        elif os.name == 'nt': # exécuté seulement sous Windows
+            print("Erreur : Il faut un Node en paramètre")
 
     def copy(self):
         """
@@ -56,7 +57,7 @@ class Node():
     def __str__(self):
         return "Noeud {"+self.name+"}"
 
-class Tree():
+class Tree:
     def __init__(self):
         """
         starting_node : Node : Noeud de départ
@@ -65,9 +66,9 @@ class Tree():
 
     def add_node(self, name, parent):
         """
-        Ajoute un noeud fils au noeud parent passé en parametre
+        Ajoute un noeud fils au noeud parent passé en paramètre
 
-        Parametres :
+        paramètres :
         ---------------------------------------
         name   : str  : Nom du noeud à rajouter
         parent : Node : Noeud parrent
@@ -77,9 +78,9 @@ class Tree():
 
     def supp_node(self, node_to_supp):
         """
-        Supprime le noeud en parametre et retourne le noeud parent auquel on a supprime un enfant
+        Supprime le noeud en paramètre et retourne le noeud parent auquel on a supprime un enfant
 
-        Parametres :
+        paramètres :
         ----------------------------------------
         node_to_supp : Node :  Noeud à supprimer
         """
@@ -95,9 +96,11 @@ class Tree():
                 else:
                     for c in node.children:
                         pile.append(c)
-        #else:
-            #print("Erreur : Il faut un Node en parametre")
-        #self.actualiser_coord()
+            return None
+        elif os.name == 'nt': # exécuté seulement sous Windows
+            print("Erreur : Il faut un Node en paramètre")
+        self.actualiser_coord()
+        return None
 
     def actualiser_coord(self):
         """
@@ -114,7 +117,7 @@ class Tree():
         """
         Ouvre l'abre contenu dans un fichier json
 
-        Parametres :
+        paramètres :
         -----------------------------------
         file_name : str : Chemin du fichier
         """
@@ -133,7 +136,7 @@ class Tree():
         """
         Ouvre l'abre contenu dans un fichier txt genere par framindmap
 
-        Parametres :
+        paramètres :
         -----------------------------------
         file_name : str : Chemin du fichier
         """
@@ -153,7 +156,7 @@ class Tree():
         """
         Enregistre l'arbre dans un fichier json
 
-        Parametres :
+        paramètres :
         -----------------------------------
         file_name : str : Chemin du fichier
         """
