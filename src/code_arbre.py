@@ -1,10 +1,12 @@
 import json
 import os
 
+
 class Node:
     """
     Objet Nœud d'un arbre de décisions
     """
+
     def __init__(self, name, coord=""):
         """
         Variables d'instance :
@@ -27,7 +29,7 @@ class Node:
         """
         if isinstance(child, Node):
             self.children.append(child)
-        elif os.name == 'nt': # exécuté seulement sous Windows
+        elif os.name == 'nt':  # exécuté seulement sous Windows
             print("Erreur : Il faut un Node en paramètre")
 
     def supp_child(self, child):
@@ -41,9 +43,9 @@ class Node:
         if isinstance(child, Node):
             if child in self.children:
                 self.children.pop(self.children.index(child))
-            elif os.name == 'nt': # exécuté seulement sous Windows
+            elif os.name == 'nt':  # exécuté seulement sous Windows
                 print("Noeud inexistant")
-        elif os.name == 'nt': # exécuté seulement sous Windows
+        elif os.name == 'nt':  # exécuté seulement sous Windows
             print("Erreur : Il faut un Node en paramètre")
 
     def copy(self):
@@ -55,7 +57,8 @@ class Node:
         return copied_node
 
     def __str__(self):
-        return "Noeud {"+self.name+"}"
+        return "Noeud {" + self.name + "}"
+
 
 class Tree:
     def __init__(self):
@@ -86,7 +89,7 @@ class Tree:
         """
         if isinstance(node_to_supp, Node):
             pile = [self.starting_node]
-            while len(pile)>0:
+            while len(pile) > 0:
                 node = pile.pop(0)
 
                 if node_to_supp in node.children:
@@ -97,7 +100,7 @@ class Tree:
                     for c in node.children:
                         pile.append(c)
             return None
-        elif os.name == 'nt': # exécuté seulement sous Windows
+        elif os.name == 'nt':  # exécuté seulement sous Windows
             print("Erreur : Il faut un Node en paramètre")
         self.actualiser_coord()
         return None
@@ -107,12 +110,12 @@ class Tree:
         Actualise l'attribut coord de tous les noeuds de l'arbre
         """
         pile = [self.starting_node]
-        while len(pile)>0:
+        while len(pile) > 0:
             node = pile.pop(0)
             for k in range(len(node.children)):
                 pile.append(node.children[k])
                 node.children[k].coord = node.coord + str(k)
-    
+
     def read_file_json(self, file_name):
         """
         Ouvre l'abre contenu dans un fichier json
@@ -121,17 +124,17 @@ class Tree:
         -----------------------------------
         file_name : str : Chemin du fichier
         """
-        f = open(file_name, "r",  encoding='utf-8')
+        f = open(file_name, "r", encoding='utf-8')
         data = json.load(f)
         f.close()
-        
-        self.starting_node = Node(data["data"]['0']['title'],"0")
-        dic = {"0":self.starting_node}
+
+        self.starting_node = Node(data["data"]['0']['title'], "0")
+        dic = {"0": self.starting_node}
         for coord in data["data"]:
             if coord != "0":
                 dic[coord] = Node(data["data"][coord]["title"], coord)
                 dic[coord[:-1]].add_children(dic[coord])
-    
+
     def read_file_txt(self, file_name):
         """
         Ouvre l'abre contenu dans un fichier txt genere par framindmap
@@ -140,18 +143,19 @@ class Tree:
         -----------------------------------
         file_name : str : Chemin du fichier
         """
-        f = open(file_name,"r", encoding='utf-8')
-        data = [c.strip().split() for c in f.readlines() if c.strip()[0] in ["0","1","2","3","4","5","6","3","8","9"]]
+        f = open(file_name, "r", encoding='utf-8')
+        data = [c.strip().split() for c in f.readlines() if
+                c.strip()[0] in ["0", "1", "2", "3", "4", "5", "6", "3", "8", "9"]]
         f.close()
         for k in range(len(data)):
-            data[k] = ["".join([str(int(i)-1) for i in data[k][0].split(".")]), " ".join(data[k][1:])]
+            data[k] = ["".join([str(int(i) - 1) for i in data[k][0].split(".")]), " ".join(data[k][1:])]
 
         self.starting_node = Node(data[0][1], "0")
-        dic = {"0":self.starting_node}
+        dic = {"0": self.starting_node}
         for elem in data[1:]:
-            dic[elem[0]] = Node(elem[1],elem[0])
+            dic[elem[0]] = Node(elem[1], elem[0])
             dic[elem[0][:-1]].add_children(dic[elem[0]])
-      
+
     def save_json(self, file_name):
         """
         Enregistre l'arbre dans un fichier json
@@ -161,50 +165,51 @@ class Tree:
         file_name : str : Chemin du fichier
         """
         pile = [self.starting_node]
-        dic = {"message":"Built by Dina, Julien, Johan, Jawad and Naim at ENSTA Bretagne",
-               "source":"serveur",
-               "lastUpdated":None,
-               "data":{}}
+        dic = {"message": "Built by Dina, Julien, Johan, Jawad and Naim at ENSTA Bretagne",
+               "source": "serveur",
+               "lastUpdated": None,
+               "data": {}}
 
-        while len(pile)>0:
+        while len(pile) > 0:
             node = pile.pop(0)
-            dic["data"][node.coord] = {"id":node.coord,
-                                       "title":node.name,
-                                       "type":1*(len(node.children)==0),
-                                       "next":[c.coord for c in node.children]}
+            dic["data"][node.coord] = {"id": node.coord,
+                                       "title": node.name,
+                                       "type": 1 * (len(node.children) == 0),
+                                       "next": [c.coord for c in node.children]}
             for c in node.children:
                 pile.append(c)
 
-        f = open(file_name+".json", "w")
+        f = open(file_name + ".json", "w")
         f.write(json.dumps(dic, indent=4))
         f.close()
-    
+
     def representation(self):
         """
         Retourne un dictionnaire du type {coordonée du node dans l'arbre : altitude du noeud dans la colonne}
         Ce dictionnaire sert uniquement pour de la représentation graphique
         """
         pile = [self.starting_node]
-        dic_taille =  {self.starting_node.coord:0}
-        dic_colonne = {self.starting_node.coord:0}
+        dic_taille = {self.starting_node.coord: 0}
+        dic_colonne = {self.starting_node.coord: 0}
         nb_colonnes = 0
-        while len(pile)>0:
+        while len(pile) > 0:
             node = pile.pop(0)
             dic_colonne[node.coord] = 0
             nb_colonnes = max(nb_colonnes, len(node.coord))
             dic_taille[node.coord] = 0
-            if len(node.children)== 0: #si l'enfant est en bout d'arbre
+            if len(node.children) == 0:  #si l'enfant est en bout d'arbre
                 dic_taille[node.coord] = 1
-                for i in range(1,len(node.coord)):
+                for i in range(1, len(node.coord)):
                     dic_taille[node.coord[:-i]] += 1
-                    
+
             for c in node.children:
                 pile.append(c)
 
         dic_y = dic_taille.copy()
-        dic_y["0"] = dic_taille["0"]/2
+        dic_y["0"] = dic_taille["0"] / 2
         for key in dic_taille:
             if key != '0':
-                dic_y[key], dic_colonne[key[:-1]] = dic_taille[key]/2 + dic_colonne[key[:-1]] + dic_y[key[:-1]] - dic_taille[key[:-1]]/2, dic_colonne[key[:-1]] + dic_taille[key]
-        
+                dic_y[key], dic_colonne[key[:-1]] = dic_taille[key] / 2 + dic_colonne[key[:-1]] + dic_y[key[:-1]] - \
+                                                    dic_taille[key[:-1]] / 2, dic_colonne[key[:-1]] + dic_taille[key]
+
         return dic_y

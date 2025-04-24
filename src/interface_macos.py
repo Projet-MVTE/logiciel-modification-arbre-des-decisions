@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-import sys, os
+import os
+import sys
 
 if hasattr(sys, 'frozen'):
     sys.stdout = open(os.devnull, "w")
@@ -11,7 +12,6 @@ import tkinter as tk  # IHM
 from tkinter import messagebox  # IHM pour les messages d'erreur
 from tkinter import filedialog  # IHM pour l'explorateur de fichiers
 from PIL import Image, ImageTk  # Pour les transformations d'image (sur les boutons principalement)
-import os  # Pour la manipulation des chemins absolus et relatifs des fichiers
 from code_arbre import *  # Pour les classes Node et Tree qui permettent de modeliser un arbre
 from interaction_serveur import *  # Pour les fonctions download et upload
 from tkinter import PhotoImage
