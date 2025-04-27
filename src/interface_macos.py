@@ -32,8 +32,6 @@ size_tool_button = (50, 50)  # Taille des boutons
 # CREATION  DE LA FENETRE
 window = tk.Tk()  # Creation de la fenetre
 window.title("IA-MVTE Modification arbre de décision")  # Titre de la fenetre
-icon = PhotoImage(file=os.path.join(base_path, "icones/IA_MVTE.png"))
-window.wm_iconphoto(True, icon)  # Icone de la fenetre
 window.geometry("{}x{}".format(int(window.winfo_screenwidth() * 0.5),
                                int(window.winfo_screenheight() * 0.5)))  # Taille de la fenetre
 
@@ -416,6 +414,7 @@ class NodeRectangle():
 
             # def undo(): #pour le ctrl-z
             #     arbre.supp_node(self.node.children[-1])
+            #     actualiser_dessin()
             #     actualiser_dessin()
             # def redo():#pour le ctrl-y
             #     arbre.add_node(node_name, self.node)
