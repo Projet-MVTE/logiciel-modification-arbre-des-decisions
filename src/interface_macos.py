@@ -32,8 +32,9 @@ size_tool_button = (50, 50)  # Taille des boutons
 # CREATION  DE LA FENETRE
 window = tk.Tk()  # Creation de la fenetre
 window.title("IA-MVTE Modification arbre de décision")  # Titre de la fenetre
-window.geometry("{}x{}".format(int(window.winfo_screenwidth() * 0.5),
-                               int(window.winfo_screenheight() * 0.5)))  # Taille de la fenetre
+win_width = int(window.winfo_screenwidth() * 0.5)  # Largeur de la fenetre
+win_height = int(window.winfo_screenheight() * 0.5)  # Hauteur de la fenetre
+window.geometry(f"{win_width}x{win_height}")
 
 # FRAME CONTENANT LES BOUTONS
 tools_frame = tk.Frame(window, relief='groove', bd=bordure)
@@ -290,7 +291,7 @@ def actualiser_dessin():
                    -canva.coords(l_NodeRectangle[0].id_rectangle)[1] + xy_offset[1])
 
 
-class NodeRectangle():
+class NodeRectangle:
     size = (200, 50)
 
     def __init__(self, node=None, pos=[50, 50]):
@@ -318,9 +319,10 @@ class NodeRectangle():
         x3, y3 = canva.coords(self.id_text)
         canva.coords(self.id_text, x3 * r_px / old_r_px, y3 * r_px / old_r_px)  #reposiotionnement du texte
         x3, y3, x4, y4 = canva.bbox(self.id_text)
-        canva.itemconfig(self.id_text, text=self.node.name[:int(self.char_size * abs(x1 - x2) * 0.8) * (
-                abs(y3 - y4) < abs(
-            y1 - y2))])  #redimensionnement du texte, On garde une marge d'affichage de 80% (0.8) de la largeur du rectangle=)
+        # redimensionnement du texte, On garde une marge d'affichage de 80% (0.8) de la largeur du rectangle=)
+        canva.itemconfig(self.id_text,
+                         text=self.node.name[:int(self.char_size
+                                                  * abs(x1 - x2) * 0.8) * (abs(y3 - y4) < abs(y1 - y2))])
 
     def highlight(self, event=None):
         canva.itemconfig(self.id_rectangle, fill='grey')
@@ -456,7 +458,7 @@ class NodeRectangle():
             # add_action_undo_stack(lambda:undo(),lambda:redo())
 
 
-class Link():
+class Link:
     def __init__(self, node_rectangle1, node_rectangle2):
         self.node_rectangle1 = node_rectangle1
         self.node_rectangle2 = node_rectangle2
