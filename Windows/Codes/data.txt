@@ -1,2 +1,0 @@
-https://backend-iamvte.up.railway.app/download_tree
-https://backend-iamvte.up.railway.app/set_tree
